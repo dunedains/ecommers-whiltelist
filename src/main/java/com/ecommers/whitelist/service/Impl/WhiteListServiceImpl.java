@@ -1,9 +1,9 @@
 package com.ecommers.whitelist.service.Impl;
 
-import com.ecommers.whitelist.client.ProductoClient;
+import com.ecommers.whitelist.client.ProductClient;
 import com.ecommers.whitelist.client.UserClient;
 import com.ecommers.whitelist.dto.WhiteListDto;
-import com.ecommers.whitelist.model.WhileList;
+import com.ecommers.whitelist.model.Wishlist;
 import com.ecommers.whitelist.repository.WhiteListRepository;
 import com.ecommers.whitelist.service.WhiteListService;
 import feign.FeignException;
@@ -19,46 +19,31 @@ import java.util.List;
 public class WhiteListServiceImpl implements WhiteListService {
 
     private final WhiteListRepository repository;
-    private final ProductoClient productoClient;
+    private final ProductClient productClient;
     private final UserClient userClient;
 
     @Override
     @Transactional
-    public WhiteListDto.WishListResponse addToWhitelist(WhiteListDto.WishListRequest request) {
-        try {
-            userClient.getUserById(request.userId());
-        } catch (FeignException.NotFound e) {
-            throw new RuntimeException("Usuario no encontrado con id: " + request.userId());
-        } catch (FeignException e) {
-            throw new RuntimeException("Error al comunicarse con el servicio de usuarios: " + e.getMessage());
-        }
+    public WhiteListDto.WishlistResponse addToWhitelist(WhiteListDto.WishlistRequest request) {
+        try { userClient.getUserById(request.userId()); }
+        catch (FeignException.NotFound e) { throw new RuntimeException("Usuario no encontrado con id: " + request.userId()); }
 
-        try {
-            productoClient.getProductoById(request.productId());
-        } catch (FeignException.NotFound e) {
-            throw new RuntimeException("Producto no encontrado con id: " + request.productId());
-        } catch (FeignException e) {
-            throw new RuntimeException("Error al comunicarse con el servicio de productos: " + e.getMessage());
-        }
+        try { productClient.getProductById(request.productId()); }
+        catch (FeignException.NotFound e) { throw new RuntimeException("Producto no encontrado con id: " + request.productId()); }
 
-        WhileList entry = new WhileList();
+        Wishlist entry = new Wishlist();
         entry.setUserId(request.userId());
         entry.setProductId(request.productId());
-
         return toResponse(repository.save(entry));
     }
 
     @Override
     @Transactional
-    public void removeFromWhitelist(Long id) {
-        repository.deleteById(id);
-    }
+    public void removeFromWhitelist(Long id) { repository.deleteById(id); }
 
     @Override
-    public List<WhiteListDto.WishListResponse> getWhitelistByUser(Long userId) {
-        return repository.findByUserId(userId).stream()
-                .map(this::toResponse)
-                .toList();
+    public List<WhiteListDto.WishlistResponse> getWhitelistByUser(Long userId) {
+        return repository.findByUserId(userId).stream().map(this::toResponse).toList();
     }
 
     @Override
@@ -68,16 +53,11 @@ public class WhiteListServiceImpl implements WhiteListService {
 
     @Override
     public WhiteListDto.UserDto getUserById(Long userId) {
-        try {
-            return userClient.getUserById(userId);
-        } catch (FeignException.NotFound e) {
-            throw new RuntimeException("Usuario no encontrado con id: " + userId);
-        } catch (FeignException e) {
-            throw new RuntimeException("Error al comunicarse con el servicio de usuarios: " + e.getMessage());
-        }
+        try { return userClient.getUserById(userId); }
+        catch (FeignException.NotFound e) { throw new RuntimeException("Usuario no encontrado con id: " + userId); }
     }
 
-    private WhiteListDto.WishListResponse toResponse(WhileList entry) {
-        return new WhiteListDto.WishListResponse(entry.getId(), entry.getUserId(), entry.getProductId());
+    private WhiteListDto.WishlistResponse toResponse(Wishlist w) {
+        return new WhiteListDto.WishlistResponse(w.getId(), w.getUserId(), w.getProductId());
     }
 }

@@ -5,9 +5,9 @@ import com.ecommers.whitelist.dto.WhiteListDto;
 import java.util.List;
 
 public interface WhiteListService {
-    WhiteListDto.WishListResponse addToWhitelist(WhiteListDto.WishListRequest request);
+    WhiteListDto.WishlistResponse addToWhitelist(WhiteListDto.WishlistRequest request);
     void removeFromWhitelist(Long id);
-    List<WhiteListDto.WishListResponse> getWhitelistByUser(Long userId);
+    List<WhiteListDto.WishlistResponse> getWhitelistByUser(Long userId);
     boolean isInWhitelist(Long userId, Long productId);
     WhiteListDto.UserDto getUserById(Long userId);
 }

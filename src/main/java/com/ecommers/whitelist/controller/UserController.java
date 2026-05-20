@@ -21,7 +21,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/wishlist")
-    public ResponseEntity<List<WhiteListDto.WishListResponse>> getWishlistByUser(@PathVariable Long userId) {
+    public ResponseEntity<List<WhiteListDto.WishlistResponse>> getWishlistByUser(@PathVariable Long userId) {
         return ResponseEntity.ok(service.getWhitelistByUser(userId));
     }
 }

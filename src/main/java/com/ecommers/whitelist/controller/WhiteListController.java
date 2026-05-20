@@ -2,7 +2,9 @@ package com.ecommers.whitelist.controller;
 
 import com.ecommers.whitelist.dto.WhiteListDto;
 import com.ecommers.whitelist.service.WhiteListService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +18,8 @@ public class WhiteListController {
     private final WhiteListService service;
 
     @PostMapping
-    public ResponseEntity<WhiteListDto.WishListResponse> addToWhitelist(@RequestBody WhiteListDto.WishListRequest request) {
-        return ResponseEntity.ok(service.addToWhitelist(request));
+    public ResponseEntity<WhiteListDto.WishlistResponse> addToWhitelist(@Valid @RequestBody WhiteListDto.WishlistRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.addToWhitelist(request));
     }
 
     @DeleteMapping("/{id}")
@@ -27,7 +29,7 @@ public class WhiteListController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<WhiteListDto.WishListResponse>> getByUser(@PathVariable Long userId) {
+    public ResponseEntity<List<WhiteListDto.WishlistResponse>> getByUser(@PathVariable Long userId) {
         return ResponseEntity.ok(service.getWhitelistByUser(userId));
     }
 
