@@ -15,8 +15,11 @@ Microservicio de lista de deseos. Permite a los usuarios guardar productos favor
 | Método | Ruta | Descripción |
 |--------|------|-------------|
 | `GET` | `/api/wishlist/user/{userId}` | Ver wishlist de un usuario |
+| `GET` | `/api/wishlist/check?userId=&productId=` | Verificar si un producto esta en la wishlist |
 | `POST` | `/api/wishlist` | Agregar producto a la wishlist |
 | `DELETE` | `/api/wishlist/{id}` | Eliminar producto de la wishlist |
+| `GET` | `/api/usuario/{userId}` | Obtener datos del usuario |
+| `GET` | `/api/usuario/{userId}/wishlist` | Ver wishlist de un usuario (ruta alternativa) |
 
 ## Ejemplo de uso
 
