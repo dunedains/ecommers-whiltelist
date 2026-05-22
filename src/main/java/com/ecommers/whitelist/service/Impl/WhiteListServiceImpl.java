@@ -29,10 +29,10 @@ public class WhiteListServiceImpl implements WhiteListService {
     public WhiteListDto.WishlistResponse addToWhitelist(WhiteListDto.WishlistRequest request) {
         log.info("Agregando a wishlist userId={} productId={}", request.userId(), request.productId());
         try { userClient.getUserById(request.userId()); }
-        catch (FeignException.NotFound e) { throw new RuntimeException("Usuario no encontrado con id: " + request.userId()); }
+        catch (FeignException.NotFound e) { throw new IllegalArgumentException("Usuario no encontrado con id: " + request.userId()); }
 
         try { productClient.getProductById(request.productId()); }
-        catch (FeignException.NotFound e) { throw new RuntimeException("Producto no encontrado con id: " + request.productId()); }
+        catch (FeignException.NotFound e) { throw new IllegalArgumentException("Producto no encontrado con id: " + request.productId()); }
 
         Wishlist entry = new Wishlist();
         entry.setUserId(request.userId());
@@ -44,6 +44,9 @@ public class WhiteListServiceImpl implements WhiteListService {
     @Transactional
     public void removeFromWhitelist(Long id) {
         log.info("Eliminando de wishlist id={}", id);
+        if (!repository.existsById(id)) {
+            throw new IllegalArgumentException("Item de wishlist no encontrado con id: " + id);
+        }
         repository.deleteById(id);
     }
 
@@ -61,7 +64,7 @@ public class WhiteListServiceImpl implements WhiteListService {
     @Override
     public WhiteListDto.UserDto getUserById(Long userId) {
         try { return userClient.getUserById(userId); }
-        catch (FeignException.NotFound e) { throw new RuntimeException("Usuario no encontrado con id: " + userId); }
+        catch (FeignException.NotFound e) { throw new IllegalArgumentException("Usuario no encontrado con id: " + userId); }
     }
 
     private WhiteListDto.WishlistResponse toResponse(Wishlist w) {
