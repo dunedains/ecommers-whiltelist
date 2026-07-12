@@ -1,4 +1,4 @@
-# Whitelist (Wishlist) Service
+# Wishlist Service
 
 Microservicio de lista de deseos. Permite a los usuarios guardar productos favoritos para comprarlos después.
 
